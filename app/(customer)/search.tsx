@@ -131,12 +131,13 @@ export default function SearchScreen() {
       </View>
 
       {/* Categories */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
-        style={styles.categoriesContainer}
-        contentContainerStyle={styles.categoriesContent}
-      >
+      <View style={styles.categoriesWrapper}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.categoriesContainer}
+          contentContainerStyle={styles.categoriesContent}
+        >
         {categories.map((category) => (
           <TouchableOpacity
             key={category.id}
@@ -156,7 +157,8 @@ export default function SearchScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       {/* Results count */}
       <Text style={styles.resultsText}>
@@ -220,18 +222,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  categoriesContainer: {
-    maxHeight: 60,
+  categoriesWrapper: {
+    height: 50,
     backgroundColor: '#fff',
-    paddingVertical: 8,
-    paddingBottom: 14,
+    marginBottom: 12,
+  },
+  categoriesContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
   categoriesContent: {
     paddingHorizontal: 16,
     paddingVertical: 4,
   },
   categoryPill: {
-    height: 34,
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginRight: 10,
@@ -240,6 +244,7 @@ const styles = StyleSheet.create({
     minWidth: 55,
     alignItems: 'center',
     justifyContent: 'center',
+    height: 34, // Thicker, more substantial pills
   },
   activeCategoryPill: {
     backgroundColor: '#222',

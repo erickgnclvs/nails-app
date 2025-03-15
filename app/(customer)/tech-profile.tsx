@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
@@ -29,21 +30,25 @@ export default function TechProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={Colors.text.primary} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Nail Artist Profile</Text>
-        <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
-          <Ionicons
-            name={isFavorite ? 'heart' : 'heart-outline'}
-            size={24}
-            color={isFavorite ? Colors.heart : Colors.text.primary}
-          />
-        </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      {/* Fixed Header */}
+      <View style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={Colors.text.primary} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Nail Artist Profile</Text>
+          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+            <Ionicons
+              name={isFavorite ? 'heart' : 'heart-outline'}
+              size={24}
+              color={isFavorite ? Colors.heart : Colors.text.primary}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
+      
+      <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
 
       {/* Profile Section */}
       <View style={styles.profileSection}>
@@ -119,11 +124,15 @@ export default function TechProfileScreen() {
         ))}
       </View>
 
-      {/* Book Appointment Button */}
-      <TouchableOpacity style={styles.bookButton}>
-        <Text style={styles.bookButtonText}>Book Appointment</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+      
+      {/* Fixed Book Button */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.bookButton}>
+          <Text style={styles.bookButtonText}>Book Appointment</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -132,14 +141,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background.primary,
   },
+  headerContainer: {
+    backgroundColor: Colors.background.primary,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 60,
-    paddingBottom: 16,
+    paddingTop: 10,
+    paddingBottom: 10,
     backgroundColor: Colors.background.primary,
+  },
+  scrollContent: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingBottom: 20,
+  },
+  buttonContainer: {
+    backgroundColor: Colors.background.primary,
+    padding: 16,
   },
   backButton: {
     padding: 8,
@@ -287,8 +309,6 @@ const styles = StyleSheet.create({
   bookButton: {
     backgroundColor: Colors.button.primary.background,
     paddingVertical: 16,
-    marginHorizontal: 16,
-    marginVertical: 24,
     borderRadius: 8,
     alignItems: 'center',
   },

@@ -128,7 +128,13 @@ export default function TechProfileScreen() {
       
       {/* Fixed Book Button */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.bookButton}>
+        <TouchableOpacity 
+          style={styles.bookButton}
+          onPress={() => router.push({
+            pathname: '/(customer)/book-appointment',
+            params: { techId: id }
+          })}
+        >
           <Text style={styles.bookButtonText}>Book Appointment</Text>
         </TouchableOpacity>
       </View>

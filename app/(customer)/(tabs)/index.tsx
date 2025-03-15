@@ -119,7 +119,10 @@ export default function CustomerDashboard() {
               </View>
               <TouchableOpacity 
                 style={styles.bookButton}
-                onPress={() => router.push(`/tech-profile?id=${tech.id}`)}
+                onPress={() => router.push({
+                  pathname: '/(customer)/book-appointment',
+                  params: { techId: tech.id }
+                })}
               >
                 <Text style={styles.bookButtonText}>Book</Text>
               </TouchableOpacity>

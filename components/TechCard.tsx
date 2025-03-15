@@ -101,7 +101,10 @@ export default function TechCard({ item, isFavorite = true, onToggleFavorite }: 
         style={styles.bookButton}
         onPress={(e) => {
           e.stopPropagation();
-          router.push(`/tech-profile?id=${item.id}`);
+          router.push({
+            pathname: '/(customer)/book-appointment',
+            params: { techId: item.id }
+          });
         }}
       >
         <Text style={styles.bookButtonText}>Book Now</Text>

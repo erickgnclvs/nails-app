@@ -1,50 +1,79 @@
-# Welcome to your Expo app 👋
+# Nails App 💅
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![Nails App](https://img.shields.io/badge/Status-In%20Development-brightgreen)
 
-## Get started
+A mobile app connecting nail technicians with customers. Built with React Native and Expo.
 
-1. Install dependencies
+## Features
 
+### For Customers
+- **Browse Nail Technicians**: Discover nail techs based on rating, location, and specialties
+- **Search Functionality**: Find technicians by name or services offered
+- **Booking System**: Easy appointment scheduling with preferred nail technicians
+- **Payment Processing**: Secure mock payment system
+- **Favorites**: Save your preferred nail technicians for future bookings
+- **Inspiration Gallery**: Browse trending nail styles and designs
+
+### For Technicians (In Development)
+- **Appointment Management**: Calendar view of all bookings
+- **Client Management**: View and manage client information
+- **Portfolio Management**: Showcase your best work
+- **Business Analytics**: Understand your performance and growth
+
+## Tech Stack
+
+- **Framework**: React Native with Expo
+- **Navigation**: Expo Router (file-based routing)
+- **Styling**: React Native StyleSheet
+- **Data**: Mock data (simulated API responses)
+
+## Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/erickgnclvs/nails-app.git
+   cd nails-app
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the development server**
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Project Structure
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **/app**: Main application code
+  - **(customer)**: Customer-facing screens
+  - **(tech)**: Technician-facing screens
+- **/components**: Reusable UI components
+- **/constants**: App constants including colors and theme settings
+- **/data**: Mock data to simulate backend responses
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Screens
 
-## Get a fresh project
+### Customer Flow
+- Home - Featured nail techs and trending styles
+- Search - Find technicians based on various criteria
+- Tech Profile - View technician details, portfolio and services
+- Booking - Schedule appointments with selected technician
+- Payment - Process payments for booked services
+- Appointments - Manage existing bookings
 
-When you're ready, run:
+### Tech Flow (In Development)
+- Dashboard - Overview of appointments and earnings
+- Appointments - Manage client bookings
+- Portfolio - Manage displayed work examples
+- Settings - Account and profile settings
 
-```bash
-npm run reset-project
-```
+## Contributing
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+This project is currently under active development. Contributions, ideas, and feedback are welcome!
 
-## Learn more
+## License
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License.

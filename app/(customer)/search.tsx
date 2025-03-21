@@ -81,23 +81,29 @@ export default function SearchScreen() {
     router.push(`/tech-profile?id=${techId}&from=search`);
   };
 
-  const renderTechItem = ({ item }: { item: SearchTech }) => (
-    <View style={styles.techCardWrapper}>
-      <TechCard
-        item={item}
-        isFavorite={false} // For demonstration, all search results are not favorites
-        onToggleFavorite={(id) => {
-          console.log(`Toggle favorite for tech ${id} from search screen`);
-          // Add logic to toggle favorite status
-        }}
-      />
-      
-      {/* Distance information - shown below the card */}
-      <View style={styles.techDistanceContainer}>
-        <Text style={styles.distanceText}>{(Math.random() * 5).toFixed(1)} miles away</Text>
+  // Generate a random distance for each tech (between 0.1 and 5.0 miles)
+  const getRandomDistance = () => {
+    return Math.random() * 5;
+  };
+
+  const renderTechItem = ({ item }: { item: SearchTech }) => {
+    // Generate a random distance if not provided in the item
+    const distance = item.distance !== undefined ? item.distance : getRandomDistance();
+    
+    return (
+      <View style={styles.techCardWrapper}>
+        <TechCard
+          item={item}
+          isFavorite={false} // For demonstration, all search results are not favorites
+          onToggleFavorite={(id) => {
+            console.log(`Toggle favorite for tech ${id} from search screen`);
+            // Add logic to toggle favorite status
+          }}
+          distance={distance}
+        />
       </View>
-    </View>
-  );
+    );
+  };
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -268,15 +274,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   techCardWrapper: {
-    marginBottom: 24,
-  },
-  techDistanceContainer: {
-    marginTop: 4,
-    paddingHorizontal: 16,
-  },
-  distanceText: {
-    fontSize: 12,
-    color: Colors.text.tertiary,
+    marginBottom: 6,
   },
   tagsContainer: {
     flexDirection: 'row',

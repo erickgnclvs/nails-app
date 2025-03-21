@@ -11,9 +11,10 @@ type TechCardProps = {
   item: TechItem;
   isFavorite?: boolean;
   onToggleFavorite?: (id: string) => void;
+  distance?: number; // Distance in miles
 };
 
-export default function TechCard({ item, isFavorite = true, onToggleFavorite }: TechCardProps) {
+export default function TechCard({ item, isFavorite = true, onToggleFavorite, distance }: TechCardProps) {
   const router = useRouter();
   
   return (
@@ -49,12 +50,21 @@ export default function TechCard({ item, isFavorite = true, onToggleFavorite }: 
         </TouchableOpacity>
       </View>
       
-      {/* Rating */}
+      {/* Rating and Distance */}
       <View style={styles.infoRow}>
-        <Ionicons name="star" size={16} color={Colors.star} />
-        <Text style={styles.infoText}>
-          {item.rating} ({item.reviews} reviews)
-        </Text>
+        <View style={styles.ratingContainer}>
+          <Ionicons name="star" size={16} color={Colors.star} />
+          <Text style={styles.infoText}>
+            {item.rating} ({item.reviews} reviews)
+          </Text>
+        </View>
+        
+        {distance !== undefined && (
+          <View style={styles.distanceContainer}>
+            <Ionicons name="location-outline" size={16} color={Colors.text.secondary} />
+            <Text style={styles.distanceText}>{distance.toFixed(1)} miles</Text>
+          </View>
+        )}
       </View>
       
       {/* Portfolio Preview */}
@@ -158,9 +168,23 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 12,
   },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  distanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   infoText: {
+    fontSize: 12,
+    color: Colors.text.secondary,
+    marginLeft: 6,
+  },
+  distanceText: {
     fontSize: 12,
     color: Colors.text.secondary,
     marginLeft: 6,

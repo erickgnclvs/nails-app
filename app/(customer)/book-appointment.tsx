@@ -112,9 +112,9 @@ export default function BookAppointmentScreen() {
   };
 
   const handleConfirmBooking = () => {
-    // In a real app, this would send the booking to a server
-    // For now, just navigate back to the bookings tab
-    router.push('/(customer)/(tabs)/bookings');
+    // In a real app, this would validate the booking details before proceeding to payment
+    // For now, just navigate to the payment screen
+    router.push(`/payment?techId=${techId}`);
   };
 
   return (

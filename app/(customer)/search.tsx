@@ -93,7 +93,7 @@ export default function SearchScreen() {
       />
       
       {/* Distance information - shown below the card */}
-      <View style={styles.distanceContainer}>
+      <View style={styles.techDistanceContainer}>
         <Text style={styles.distanceText}>{(Math.random() * 5).toFixed(1)} miles away</Text>
       </View>
     </View>
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   techCardWrapper: {
     marginBottom: 24,
   },
-  distanceContainer: {
+  techDistanceContainer: {
     marginTop: 4,
     paddingHorizontal: 16,
   },

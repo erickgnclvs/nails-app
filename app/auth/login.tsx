@@ -43,7 +43,7 @@ export default function LoginScreen() {
         <View style={styles.logoCircle}>
           <Ionicons name="brush" size={32} color="#fff" />
         </View>
-        <Text style={styles.welcomeText}>Welcome to NailPro</Text>
+        <Text style={styles.welcomeText}>Welcome to Nails</Text>
         <Text style={styles.subtitleText}>Sign in or create an account</Text>
       </View>
 

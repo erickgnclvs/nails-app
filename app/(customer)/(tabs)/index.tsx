@@ -14,7 +14,7 @@ export default function CustomerDashboard() {
       <View style={styles.header}>
         <View style={styles.logoContainer}>
           <Ionicons name="person-circle-outline" size={24} color="#222" />
-          <Text style={styles.appName}>NailPro</Text>
+          <Text style={styles.appName}>Nails</Text>
         </View>
         <View style={styles.headerIcons}>
           <TouchableOpacity 

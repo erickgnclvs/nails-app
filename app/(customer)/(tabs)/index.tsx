@@ -67,6 +67,18 @@ export default function CustomerDashboard() {
               <TouchableOpacity 
                 key={style.id} 
                 style={[styles.styleCard, { height: style.height }]}
+                onPress={() => {
+                  // Navigate to category detail via the inspiration tab
+                  const categoryName = style.name.split(' ')[0]; // Get first word of style name
+                  router.push({
+                    pathname: '/(customer)/(tabs)/inspiration',
+                    params: { initialTab: 'true' }
+                  });
+                  // After a small delay, navigate to the category detail
+                  setTimeout(() => {
+                    router.push(`/category-detail?category=${categoryName}`);
+                  }, 100);
+                }}
               >
                 <Image 
                   source={style.image} 
@@ -86,6 +98,18 @@ export default function CustomerDashboard() {
               <TouchableOpacity 
                 key={style.id} 
                 style={[styles.styleCard, { height: style.height }]}
+                onPress={() => {
+                  // Navigate to category detail via the inspiration tab
+                  const categoryName = style.name.split(' ')[0]; // Get first word of style name
+                  router.push({
+                    pathname: '/(customer)/(tabs)/inspiration',
+                    params: { initialTab: 'true' }
+                  });
+                  // After a small delay, navigate to the category detail
+                  setTimeout(() => {
+                    router.push(`/category-detail?category=${categoryName}`);
+                  }, 100);
+                }}
               >
                 <Image 
                   source={style.image} 

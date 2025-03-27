@@ -457,6 +457,216 @@ export const getRatingDistribution = (techId: string) => {
 
 // ===== INSPIRATION SCREEN TYPES & DATA =====
 
+// Category Images - Used in Category Detail Screen
+export type CategoryImage = {
+  id: string;
+  name: string;
+  image: any;
+  height: number; // For masonry layout
+  width?: number; // Optional for advanced layouts
+  category: string;
+  description?: string;
+  likes?: number;
+  techId: string; // ID of the nail tech who created this
+  techName: string; // Name of the nail tech
+  techImage: any; // Profile image of the tech
+};
+
+// Categories available in the app
+export const CATEGORIES = ['All', 'French', 'Gel', 'Acrylic', 'Art', 'Ombre', 'Marble'];
+
+// Helper to map category name to its ID
+export const getCategoryId = (name: string): string => {
+  const formatted = name.toLowerCase().replace(/\s+/g, '-');
+  return CATEGORIES.find(cat => cat.toLowerCase() === formatted) ? 
+    formatted : 
+    CATEGORIES.find(cat => cat.toLowerCase().includes(formatted)) ? 
+    CATEGORIES.find(cat => cat.toLowerCase().includes(formatted))!.toLowerCase() : 
+    'all';
+};
+
+// Helper to get images by category
+export const getImagesByCategory = (category: string): CategoryImage[] => {
+  if (category.toLowerCase() === 'all') {
+    return CATEGORY_IMAGES;
+  }
+  return CATEGORY_IMAGES.filter(img => img.category.toLowerCase() === category.toLowerCase());
+};
+
+// Extended dataset with multiple images per category
+export const CATEGORY_IMAGES: CategoryImage[] = [
+  // French Manicure images
+  { 
+    id: 'french-1', 
+    name: 'Classic French', 
+    image: require('../assets/images/nails/Nail Art Photo.jpeg'), 
+    height: 180, 
+    category: 'French', 
+    likes: 142,
+    techId: '1',
+    techName: 'Sarah Johnson',
+    techImage: require('../assets/images/profiles/profile1.jpg')
+  },
+  { 
+    id: 'french-2', 
+    name: 'Modern French', 
+    image: require('../assets/images/nails/Nail Art Photo (2).webp'), 
+    height: 200, 
+    category: 'French', 
+    likes: 89,
+    techId: '2',
+    techName: 'Emily Chen',
+    techImage: require('../assets/images/profiles/profile2.jpg')
+  },
+  { 
+    id: 'french-3', 
+    name: 'Colored French', 
+    image: require('../assets/images/nails/Nail Art Photo (4).webp'), 
+    height: 160, 
+    category: 'French', 
+    likes: 112,
+    techId: '3',
+    techName: 'Maria Garcia',
+    techImage: require('../assets/images/profiles/profile3.jpg')
+  },
+  { 
+    id: 'french-4', 
+    name: 'French with Gems', 
+    image: require('../assets/images/nails/Nail Art Photo (3).webp'), 
+    height: 190, 
+    category: 'French', 
+    likes: 78,
+    techId: '4',
+    techName: 'Jennifer Lopez',
+    techImage: require('../assets/images/profiles/profile4.jpg')
+  },
+  { 
+    id: 'french-5', 
+    name: 'Thin Line French', 
+    image: require('../assets/images/nails/Nail Art Photo (1).webp'), 
+    height: 180, 
+    category: 'French', 
+    likes: 93,
+    techId: '1',
+    techName: 'Sarah Johnson',
+    techImage: require('../assets/images/profiles/profile1.jpg')
+  },
+  { 
+    id: 'french-6', 
+    name: 'Curved French', 
+    image: require('../assets/images/nails/Nail Art Photo 3230266.webp'), 
+    height: 170, 
+    category: 'French', 
+    likes: 67,
+    techId: '2',
+    techName: 'Emily Chen',
+    techImage: require('../assets/images/profiles/profile2.jpg')
+  },
+  
+  // Gel Extension images
+  { 
+    id: 'gel-1', 
+    name: 'Clear Gel', 
+    image: require('../assets/images/nails/Nail Art Photo (1).webp'), 
+    height: 180, 
+    category: 'Gel', 
+    likes: 156,
+    techId: '3',
+    techName: 'Maria Garcia',
+    techImage: require('../assets/images/profiles/profile3.jpg')
+  },
+  { 
+    id: 'gel-2', 
+    name: 'Pink Gel', 
+    image: require('../assets/images/nails/Nail Art Photo (2).webp'), 
+    height: 170, 
+    category: 'Gel', 
+    likes: 103,
+    techId: '4',
+    techName: 'Jennifer Lopez',
+    techImage: require('../assets/images/profiles/profile4.jpg')
+  },
+  { 
+    id: 'gel-3', 
+    name: 'Gel with Glitter', 
+    image: require('../assets/images/nails/Nail Art Photo (3).webp'), 
+    height: 190, 
+    category: 'Gel', 
+    likes: 145,
+    techId: '1',
+    techName: 'Sarah Johnson',
+    techImage: require('../assets/images/profiles/profile1.jpg')
+  },
+  { 
+    id: 'gel-4', 
+    name: 'Gel Extension', 
+    image: require('../assets/images/nails/Nail Art Photo (4).webp'), 
+    height: 200, 
+    category: 'Gel', 
+    likes: 88,
+    techId: '2',
+    techName: 'Emily Chen',
+    techImage: require('../assets/images/profiles/profile2.jpg')
+  },
+  { 
+    id: 'gel-5', 
+    name: 'Stiletto Gel', 
+    image: require('../assets/images/nails/Nail Art Photo.jpeg'), 
+    height: 180, 
+    category: 'Gel', 
+    likes: 129,
+    techId: '3',
+    techName: 'Maria Garcia',
+    techImage: require('../assets/images/profiles/profile3.jpg')
+  },
+  { 
+    id: 'gel-6', 
+    name: 'Square Gel', 
+    image: require('../assets/images/nails/Nail Art Photo 3230266.webp'), 
+    height: 160, 
+    category: 'Gel', 
+    likes: 76,
+    techId: '4',
+    techName: 'Jennifer Lopez',
+    techImage: require('../assets/images/profiles/profile4.jpg')
+  },
+  
+  // Chrome Finish / Art category images
+  { 
+    id: 'art-1', 
+    name: 'Chrome Art', 
+    image: require('../assets/images/nails/Nail Art Photo (2).webp'), 
+    height: 180, 
+    category: 'Art', 
+    likes: 167,
+    techId: '2',
+    techName: 'Emily Chen',
+    techImage: require('../assets/images/profiles/profile2.jpg')
+  },
+  { 
+    id: 'art-2', 
+    name: 'Floral Art', 
+    image: require('../assets/images/nails/Nail Art Photo (3).webp'), 
+    height: 190, 
+    category: 'Art', 
+    likes: 134,
+    techId: '1',
+    techName: 'Sarah Johnson',
+    techImage: require('../assets/images/profiles/profile1.jpg')
+  },
+  { 
+    id: 'art-3', 
+    name: 'Abstract Art', 
+    image: require('../assets/images/nails/Nail Art Photo (4).webp'), 
+    height: 170, 
+    category: 'Art', 
+    likes: 98,
+    techId: '3',
+    techName: 'Maria Garcia',
+    techImage: require('../assets/images/profiles/profile3.jpg')
+  }
+];
+
 // Inspiration Styles
 export type InspirationStyle = {
   id: string;

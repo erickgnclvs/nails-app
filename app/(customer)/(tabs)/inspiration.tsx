@@ -2,12 +2,14 @@ import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity } from 'rea
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { INSPIRATION_STYLES } from '@/data/mockData';
 
 // Categories for filter
 const CATEGORIES = ['All', 'Gel', 'Acrylic', 'French', 'Art'];
 
 export default function InspirationScreen() {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('All');
   
   // Filter styles based on selected category
@@ -67,6 +69,7 @@ export default function InspirationScreen() {
               <TouchableOpacity 
                 key={style.id} 
                 style={[styles.styleCard, { height: style.height }]}
+                onPress={() => router.push(`/category-detail?category=${style.category}`)}
               >
                 <Image 
                   source={style.image} 
@@ -86,6 +89,7 @@ export default function InspirationScreen() {
               <TouchableOpacity 
                 key={style.id} 
                 style={[styles.styleCard, { height: style.height }]}
+                onPress={() => router.push(`/category-detail?category=${style.category}`)}
               >
                 <Image 
                   source={style.image} 

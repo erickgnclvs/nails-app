@@ -24,9 +24,6 @@ export default function ProfileScreen() {
       
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Profile</Text>
-        <TouchableOpacity style={styles.settingsButton}>
-          <Ionicons name="settings-outline" size={24} color="#222" />
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollView}>
@@ -52,15 +49,21 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.statsSection}>
-          <View style={styles.statItem}>
+          <TouchableOpacity 
+            style={styles.statItem}
+            onPress={() => router.push('/(customer)/(tabs)/bookings')}
+          >
             <Text style={styles.statNumber}>{USER.appointments}</Text>
             <Text style={styles.statLabel}>Appointments</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.statDivider} />
-          <View style={styles.statItem}>
+          <TouchableOpacity 
+            style={styles.statItem}
+            onPress={() => router.push('/(customer)/(tabs)/favorites')}
+          >
             <Text style={styles.statNumber}>{USER.favorites}</Text>
             <Text style={styles.statLabel}>Favorites</Text>
-          </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.menuSection}>

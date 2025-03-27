@@ -2,28 +2,7 @@
 
 // ===== CUSTOMER DASHBOARD TYPES & DATA =====
 
-// Featured Techs (Stories)
-export type FeaturedTech = {
-  id: string;
-  name: string;
-  profileImage: any;
-  watched: boolean;
-};
-
-export const FEATURED_TECHS: FeaturedTech[] = [
-  { id: '1', name: 'Sarah M.', profileImage: require('../assets/images/profiles/profile1.jpg'), watched: true },
-  { id: '2', name: 'Lisa K.', profileImage: require('../assets/images/profiles/profile2.jpg'), watched: true },
-  { id: '3', name: 'Amy R.', profileImage: require('../assets/images/profiles/profile3.jpg'), watched: false },
-  { id: '4', name: 'Jane D.', profileImage: require('../assets/images/profiles/profile4.jpg'), watched: false },
-  { id: '5', name: 'Emily W.', profileImage: require('../assets/images/profiles/profile5.jpg'), watched: false },
-  { id: '6', name: 'Sophia T.', profileImage: require('../assets/images/profiles/profile1.jpg'), watched: false },
-  { id: '7', name: 'Olivia P.', profileImage: require('../assets/images/profiles/profile2.jpg'), watched: false },
-  { id: '8', name: 'Mia C.', profileImage: require('../assets/images/profiles/profile3.jpg'), watched: false },
-  { id: '9', name: 'Isabella R.', profileImage: require('../assets/images/profiles/profile4.jpg'), watched: false },
-  { id: '10', name: 'Ava B.', profileImage: require('../assets/images/profiles/profile5.jpg'), watched: false },
-  { id: '11', name: 'Charlotte G.', profileImage: require('../assets/images/profiles/profile1.jpg'), watched: false },
-  { id: '12', name: 'Amelia S.', profileImage: require('../assets/images/profiles/profile2.jpg'), watched: false },
-];
+// NOTE: Featured Techs (Stories) moved to storiesData.ts
 
 // Trending Styles
 export type TrendingStyle = {

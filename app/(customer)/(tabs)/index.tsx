@@ -2,7 +2,8 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView, FlatList, Image }
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { FEATURED_TECHS, TRENDING_STYLES, TOP_RATED_TECHS } from '@/data/mockData';
+import { FEATURED_TECHS } from '@/data/storiesData';
+import { TRENDING_STYLES, TOP_RATED_TECHS } from '@/data/mockData';
 
 export default function CustomerDashboard() {
   const router = useRouter();
@@ -37,7 +38,10 @@ export default function CustomerDashboard() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.featuredTechsContainer}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.techItem}>
+            <TouchableOpacity 
+              style={styles.techItem}
+              onPress={() => router.push(`/(customer)/stories?techId=${item.id}`)}
+            >
               <View style={[
                 styles.techAvatar, 
                 { borderColor: item.watched ? '#aaa' : '#000' }

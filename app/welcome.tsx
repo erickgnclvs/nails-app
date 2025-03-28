@@ -23,7 +23,7 @@ export default function WelcomeScreen() {
         <View style={styles.logoCircle}>
           <Text style={styles.logoPlaceholder}>?</Text>
         </View>
-        <Text style={styles.appName}>NailsPro</Text>
+        <Text style={styles.appName}>Nails</Text>
       </View>
 
       {/* Tagline and description */}

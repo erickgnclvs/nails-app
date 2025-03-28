@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { BOOKINGS, BookingItem } from '@/data/mockData';
 import { Colors } from '@/constants/Colors';
+import { useRouter } from 'expo-router';
 
 export default function BookingsScreen() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   
   // Filter bookings based on active tab
@@ -16,7 +18,13 @@ export default function BookingsScreen() {
   );
 
   const renderBookingItem = ({ item }: { item: BookingItem }) => (
-    <View style={styles.bookingCard}>
+    <TouchableOpacity 
+      style={styles.bookingCard}
+      onPress={() => router.push({
+        pathname: '/(customer)/appointment-details',
+        params: { id: item.id }
+      })}
+    >
       {/* Tech Info */}
       <View style={styles.techInfoContainer}>
         <Image source={item.profileImage} style={styles.techImage} />
@@ -73,7 +81,7 @@ export default function BookingsScreen() {
           </>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

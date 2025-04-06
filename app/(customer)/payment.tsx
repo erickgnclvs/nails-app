@@ -81,7 +81,7 @@ export default function PaymentScreen() {
       [
         { 
           text: 'OK', 
-          onPress: () => router.push('/(customer)/(tabs)/bookings')
+          onPress: () => router.replace('/(customer)/(tabs)/bookings')
         }
       ]
     );

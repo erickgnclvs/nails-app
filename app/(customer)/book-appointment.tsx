@@ -114,7 +114,9 @@ export default function BookAppointmentScreen() {
   const handleConfirmBooking = () => {
     // In a real app, this would validate the booking details before proceeding to payment
     // For now, just navigate to the payment screen
-    router.push(`/payment?techId=${techId}`);
+    router.replace(`/payment?techId=${techId}`);
+    // Note: We'll need to use router.push here because this is STARTING a workflow (for now, in development it stays with .replace)
+    // At the end of the payment workflow, we'll use router.replace to clear the stack
   };
 
   return (

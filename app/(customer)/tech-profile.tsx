@@ -5,21 +5,29 @@ import {
   View,
   Text,
   Image,
+  ImageSourcePropType, // Import missing type
   StyleSheet,
   TouchableOpacity,
   ScrollView,
   FlatList,
   SafeAreaView,
+  Modal,
 } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
 import { FAVORITE_TECHS, Service, TechItem } from '@/data/mockData';
+import ImageView from "react-native-image-viewing";
 
 export default function TechProfileScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string; from?: string }>();
   const { id, from } = params;
   const [isFavorite, setIsFavorite] = useState(true); // Assume already a favorite
+
+  // State for Image Viewer Modal
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const [imagesForViewer, setImagesForViewer] = useState<{ uri: string }[]>([]);
 
   // Find the tech with the matching id
   const tech = FAVORITE_TECHS.find((tech) => tech.id === id) || FAVORITE_TECHS[0];
@@ -28,6 +36,23 @@ export default function TechProfileScreen() {
     setIsFavorite(!isFavorite);
     // In a real app, this would update the user's favorites in a database
   };
+
+  // --- Image Viewer Handlers ---
+  const openImageViewer = (photos: ImageSourcePropType[], index: number) => {
+    if (!photos || photos.length === 0) return; // Guard clause
+    const formattedImages = photos.map(photoSource => 
+        ({ uri: Image.resolveAssetSource(photoSource as ImageSourcePropType).uri })
+    );
+    setImagesForViewer(formattedImages);
+    setCurrentImageIndex(index);
+    setIsImageViewVisible(true);
+  };
+
+  const closeImageViewer = () => {
+    setIsImageViewVisible(false);
+    setImagesForViewer([]); // Clear images when closing
+  };
+  // ---------------------------
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,7 +128,7 @@ export default function TechProfileScreen() {
         </View>
         <View style={styles.portfolioGrid}>
           {tech.portfolio?.map((image, index) => (
-            <TouchableOpacity key={index} style={styles.portfolioItem}>
+            <TouchableOpacity key={index} style={styles.portfolioImageContainer} onPress={() => openImageViewer(tech.portfolio || [], index)}>
               <Image source={image} style={styles.portfolioImage} />
             </TouchableOpacity>
           ))}
@@ -138,6 +163,17 @@ export default function TechProfileScreen() {
           <Text style={styles.bookButtonText}>Book Appointment</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Image Viewer Modal */}
+      <ImageView
+        images={imagesForViewer}
+        imageIndex={currentImageIndex}
+        visible={isImageViewVisible}
+        onRequestClose={closeImageViewer}
+        FooterComponent={({ imageIndex }) => (
+          <Text style={styles.imageViewerFooter}>{`${imageIndex + 1} / ${imagesForViewer.length}`}</Text>
+        )}
+      />
     </SafeAreaView>
   );
 }
@@ -275,7 +311,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  portfolioItem: {
+  portfolioImageContainer: {
     width: '31%',
     marginBottom: 12,
   },
@@ -283,11 +319,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 100,
     borderRadius: 8,
-  },
-  portfolioItemText: {
-    fontSize: 12,
-    color: Colors.text.tertiary,
-    marginTop: 4,
   },
   serviceItem: {
     flexDirection: 'row',
@@ -322,5 +353,11 @@ const styles = StyleSheet.create({
     color: Colors.button.primary.text,
     fontSize: 16,
     fontWeight: '600',
+  },
+  imageViewerFooter: {
+    textAlign: 'center',
+    color: 'white',
+    paddingBottom: 20,
+    fontSize: 14,
   },
 });

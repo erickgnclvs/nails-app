@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, ViewStyle, TextStyle, ImageStyle, ColorValue, Modal, Animated } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, ViewStyle, TextStyle, ImageStyle, ColorValue, Modal, Animated, ImageSourcePropType } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/Colors';
-import { FAVORITE_TECHS, REVIEWS, getReviewsForTech, getRatingDistribution } from '../../data/mockData';
+import { FAVORITE_TECHS, REVIEWS, Review, getRatingDistribution } from '../../data/mockData';
+import ImageView from "react-native-image-viewing"; // Import Image Viewer
 
 // Helper function to handle nested color objects
 const getColor = (color: any): string => {
@@ -36,8 +37,8 @@ export default function TechReviewsScreen() {
   // Find the tech with the matching id
   const tech = FAVORITE_TECHS.find((tech) => tech.id === id) || FAVORITE_TECHS[0];
   
-  // Get reviews for this tech
-  const reviews = getReviewsForTech(tech.id);
+  // Get reviews for this tech by filtering the main REVIEWS array
+  const reviews = REVIEWS.filter(review => review.techId === tech.id);
   
   // Apply filters and sorting
   const getFilteredAndSortedReviews = () => {
@@ -134,7 +135,27 @@ export default function TechReviewsScreen() {
     toggleFilterModal();
   };
 
-  const renderReviewItem = ({ item }: { item: typeof reviews[0] }) => (
+  // State for Image Viewer Modal
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const [imagesForViewer, setImagesForViewer] = useState<{ uri: string }[]>([]);
+
+  // --- Image Viewer Handlers ---
+  const openImageViewer = (photos: ImageSourcePropType[], index: number) => {
+    const formattedImages = photos.map(photoSource => 
+        ({ uri: Image.resolveAssetSource(photoSource as ImageSourcePropType).uri })
+    );
+    setImagesForViewer(formattedImages);
+    setCurrentImageIndex(index);
+    setIsImageViewVisible(true);
+  };
+
+  const closeImageViewer = () => {
+    setIsImageViewVisible(false);
+    setImagesForViewer([]); // Clear images when closing
+  };
+
+  const renderReviewItem = ({ item }: { item: Review }) => (
     <View style={styles.reviewItem}>
       <View style={styles.reviewHeader}>
         <View style={styles.reviewerInfo}>
@@ -145,7 +166,7 @@ export default function TechReviewsScreen() {
       </View>
       
       <View style={styles.starsContainer}>
-        {[1, 2, 3, 4, 5].map((star) => (
+        {[1, 2, 3, 4, 5].map((star: number) => (
           <Ionicons 
             key={star}
             name="star" 
@@ -160,10 +181,10 @@ export default function TechReviewsScreen() {
       
       {item.photos && item.photos.length > 0 && (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosContainer}>
-          {item.photos.map((photo, index) => (
-            <View key={index} style={styles.photoWrapper}>
-              <Image source={photo} style={styles.reviewPhoto} />
-            </View>
+          {item.photos.map((photoSource, index) => (
+            <TouchableOpacity key={index} onPress={() => openImageViewer(item.photos || [], index)}>
+              <Image source={photoSource as ImageSourcePropType} style={styles.reviewPhoto} />
+            </TouchableOpacity>
           ))}
         </ScrollView>
       )}
@@ -171,7 +192,7 @@ export default function TechReviewsScreen() {
       <View style={styles.helpfulContainer}>
         <TouchableOpacity style={styles.helpfulButton}>
           <Ionicons name="thumbs-up-outline" size={18} color={Colors.text.primary} />
-          <Text style={styles.helpfulText}>Helpful ({item.helpfulCount})</Text>
+          <Text style={styles.helpfulText}>Helpful ({item.helpfulCount ?? 0})</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -205,7 +226,7 @@ export default function TechReviewsScreen() {
                 <View style={styles.ratingContainer}>
                   <Text style={styles.ratingText}>{tech.rating}</Text>
                   <View style={styles.starsContainer}>
-                    {[1, 2, 3, 4, 5].map((star) => (
+                    {[1, 2, 3, 4, 5].map((star: number) => (
                       <Ionicons 
                         key={star}
                         name="star" 
@@ -385,7 +406,7 @@ export default function TechReviewsScreen() {
               <View style={styles.ratingOptionContainer}>
                 <Text style={styles.modalOptionText}>5 Stars</Text>
                 <View style={styles.miniStarContainer}>
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star: number) => (
                     <Ionicons key={star} name="star" size={14} color={Colors.star} />
                   ))}
                 </View>
@@ -402,7 +423,7 @@ export default function TechReviewsScreen() {
               <View style={styles.ratingOptionContainer}>
                 <Text style={styles.modalOptionText}>4 Stars</Text>
                 <View style={styles.miniStarContainer}>
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star: number) => (
                     <Ionicons 
                       key={star} 
                       name="star" 
@@ -424,7 +445,7 @@ export default function TechReviewsScreen() {
               <View style={styles.ratingOptionContainer}>
                 <Text style={styles.modalOptionText}>3 Stars</Text>
                 <View style={styles.miniStarContainer}>
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star: number) => (
                     <Ionicons 
                       key={star} 
                       name="star" 
@@ -446,7 +467,7 @@ export default function TechReviewsScreen() {
               <View style={styles.ratingOptionContainer}>
                 <Text style={styles.modalOptionText}>2 Stars</Text>
                 <View style={styles.miniStarContainer}>
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star: number) => (
                     <Ionicons 
                       key={star} 
                       name="star" 
@@ -468,7 +489,7 @@ export default function TechReviewsScreen() {
               <View style={styles.ratingOptionContainer}>
                 <Text style={styles.modalOptionText}>1 Star</Text>
                 <View style={styles.miniStarContainer}>
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map((star: number) => (
                     <Ionicons 
                       key={star} 
                       name="star" 
@@ -485,6 +506,17 @@ export default function TechReviewsScreen() {
           </Animated.View>
         </TouchableOpacity>
       </Modal>
+      
+      {/* Image Viewer Modal */}
+      <ImageView
+        images={imagesForViewer}
+        imageIndex={currentImageIndex}
+        visible={isImageViewVisible}
+        onRequestClose={closeImageViewer}
+        FooterComponent={({ imageIndex }) => (
+          <Text style={styles.imageViewerFooter}>{`${imageIndex + 1} / ${imagesForViewer.length}`}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -540,6 +572,7 @@ type Styles = {
   modalOptionText: TextStyle;
   ratingOptionContainer: ViewStyle;
   miniStarContainer: ViewStyle;
+  imageViewerFooter: TextStyle;
 };
 
 // Use StyleSheet.create with the Styles type
@@ -809,5 +842,11 @@ const styles = StyleSheet.create<Styles>({
   miniStarContainer: {
     flexDirection: 'row',
     marginLeft: 12,
+  },
+  imageViewerFooter: { // Style for the image counter in the viewer
+    textAlign: 'center',
+    color: 'white',
+    paddingBottom: 20,
+    fontSize: 14,
   },
 });

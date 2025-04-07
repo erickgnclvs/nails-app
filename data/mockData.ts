@@ -39,59 +39,183 @@ export const TOP_RATED_TECHS: TopRatedTech[] = [
 
 // ===== BOOKINGS TYPES & DATA =====
 
+import { ImageSourcePropType } from 'react-native';
+
+export type Review = {
+  id: string;
+  bookingId: string; // Link review to a specific booking
+  techId: string; // Can be useful for aggregating tech reviews
+  userName: string; // Ideally get from logged-in user
+  userImage?: any; // Optional user profile image
+  rating: number;
+  date: string; // Date the review was submitted
+  text: string;
+  photos?: ImageSourcePropType[]; // Optional array for review photos
+  service?: string; // Optional service associated with the review
+  helpfulCount?: number; // Optional count of helpful votes
+};
+
 export type BookingItem = {
   id: string;
+  techId: string; // Added techId
   techName: string;
   service: string;
   date: string;
   time: string;
   location: string;
-  status: 'confirmed' | 'pending' | 'completed';
+  status: 'confirmed' | 'pending' | 'completed' | 'cancelled'; // Add cancelled status back
   profileImage: any;
+  reviewId?: string | null; // Add reviewId back
 };
 
 export const BOOKINGS: BookingItem[] = [
   { 
     id: '1', 
+    techId: '1', // Added techId
     techName: 'Sarah Johnson', 
     service: 'Nail Technician',
     date: 'March 15, 2025',
     time: '2:30 PM',
     location: '123 Beauty Street, Suite 4',
     status: 'confirmed',
-    profileImage: require('../assets/images/profiles/profile1.jpg')
+    profileImage: require('../assets/images/profiles/profile1.jpg'),
+    reviewId: 'r3' // Initialize reviewId
   },
   { 
     id: '2', 
+    techId: '2', // Added techId
     techName: 'Emily Davis', 
     service: 'Nail Technician',
     date: 'March 20, 2025',
     time: '1:00 PM',
     location: '456 Nail Avenue, Unit 2',
     status: 'pending',
-    profileImage: require('../assets/images/profiles/profile5.jpg')
+    profileImage: require('../assets/images/profiles/profile5.jpg'),
+    reviewId: null // Initialize reviewId
   },
   { 
     id: '3', 
+    techId: '3', // Added techId
     techName: 'Maria Garcia', 
     service: 'Nail Technician',
     date: 'February 28, 2025',
     time: '1:00 PM',
     location: '789 Spa Boulevard, Suite 12',
     status: 'completed',
-    profileImage: require('../assets/images/profiles/profile3.jpg')
+    profileImage: require('../assets/images/profiles/profile3.jpg'),
+    reviewId: null // Set back to null to allow leaving a new review
   },
   { 
     id: '4', 
+    techId: '1', // Added techId
     techName: 'Jennifer Lopez', 
     service: 'Nail Technician',
     date: 'February 15, 2025',
     time: '11:30 AM',
     location: '321 Glamour Road, Shop 5',
     status: 'completed',
-    profileImage: require('../assets/images/profiles/profile4.jpg')
+    profileImage: require('../assets/images/profiles/profile4.jpg'),
+    reviewId: 'r1' // Initialize reviewId
   },
 ];
+
+export const REVIEWS: Review[] = [
+  {
+    id: 'r1',
+    bookingId: '4', // Linked to booking 4
+    techId: '1', // Matches techId in booking 4 (Jennifer Lopez/Sarah Johnson)
+    userName: 'Alex M.', // Placeholder name
+    userImage: require('../assets/images/profiles/profile2.jpg'), // Example user image
+    rating: 5,
+    date: '2025-02-18', // Example date after booking
+    text: 'Jennifer was fantastic! Very detailed work and super friendly.',
+    service: 'Nail Technician', // Match service from booking
+    helpfulCount: 5, // Example helpful count
+  },
+  {
+    id: 'r2',
+    bookingId: '3', // Linked to booking 3
+    techId: '3', // Matches techId in booking 3 (Maria Garcia)
+    userName: 'Samantha K.', 
+    userImage: require('../assets/images/profiles/profile4.jpg'),
+    rating: 4,
+    date: '2025-03-02',
+    text: 'Good service, my nails look great. A bit rushed though.',
+    service: 'Nail Technician',
+    photos: [
+      require('../assets/images/nails/Nail Art Photo (2).webp'),
+      require('../assets/images/nails/Nail Art Photo (3).webp')
+    ],
+    helpfulCount: 2,
+  },
+  {
+    id: 'r3',
+    bookingId: '1', // Linked to booking 1
+    techId: '1', // Matches techId in booking 1 (Sarah Johnson)
+    userName: 'Mike P.',
+    rating: 5,
+    date: '2025-03-17',
+    text: 'Perfect gel manicure, lasted for weeks! Highly recommend Sarah.',
+    service: 'Nail Technician',
+    photos: [
+      require('../assets/images/nails/Nail Art Photo (4).webp')
+    ],
+  },
+  // Add more sample reviews if needed
+];
+
+// ===== UTILITY FUNCTIONS =====
+
+/**
+ * Calculates the distribution of ratings for a specific tech.
+ * @param techId The ID of the technician.
+ * @returns An object containing rating counts and percentages.
+ */
+export const getRatingDistribution = (techId: string) => {
+    const techReviews = REVIEWS.filter(review => review.techId === techId);
+    const totalReviews = techReviews.length;
+
+    if (totalReviews === 0) {
+        return {
+            averageRating: 0,
+            totalReviews: 0,
+            distribution: {
+                '5': 0, '4': 0, '3': 0, '2': 0, '1': 0
+            },
+            percentages: {
+                '5': 0, '4': 0, '3': 0, '2': 0, '1': 0
+            },
+            fiveStarPercentage: 0 // Specific request from tech-reviews
+        };
+    }
+
+    const distribution = { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 };
+    let totalRatingSum = 0;
+
+    techReviews.forEach(review => {
+        const ratingStr = String(review.rating) as keyof typeof distribution;
+        if (distribution.hasOwnProperty(ratingStr)) {
+            distribution[ratingStr]++;
+        }
+        totalRatingSum += review.rating;
+    });
+
+    const percentages = {
+         '5': (distribution['5'] / totalReviews) * 100,
+         '4': (distribution['4'] / totalReviews) * 100,
+         '3': (distribution['3'] / totalReviews) * 100,
+         '2': (distribution['2'] / totalReviews) * 100,
+         '1': (distribution['1'] / totalReviews) * 100,
+    };
+
+    return {
+        averageRating: totalRatingSum / totalReviews,
+        totalReviews: totalReviews,
+        distribution: distribution,
+        percentages: percentages,
+        fiveStarPercentage: percentages['5'] // Specific request from tech-reviews
+    };
+};
 
 // ===== FAVORITES TYPES & DATA =====
 
@@ -281,179 +405,147 @@ export const APPOINTMENTS: Appointment[] = [
 
 // ===== REVIEWS TYPES & DATA =====
 
-export type Review = {
-  id: string;
-  techId: string;
-  userName: string;
-  userImage: any;
-  rating: number;
-  date: string;
-  service: string;
-  text: string;
-  photos?: any[];
-  helpfulCount: number;
-};
-
-export const REVIEWS: Review[] = [
-  // Reviews for Sarah Johnson (ID: 1)
-  {
-    id: '1',
-    techId: '1', // Sarah Johnson
-    userName: 'Emily W.',
-    userImage: require('../assets/images/profiles/profile5.jpg'),
-    rating: 5,
-    date: 'Jan 15, 2025',
-    service: 'Gel Manicure',
-    text: 'Amazing work as always. Love how my nails turned out. The design was exactly what I wanted.',
-    photos: [
-      require('../assets/images/nails/Nail Art Photo.jpeg'),
-      require('../assets/images/nails/Nail Art Photo (1).webp')
-    ],
-    helpfulCount: 23
-  },
-  {
-    id: '2',
-    techId: '1', // Sarah Johnson
-    userName: 'Jessica T.',
-    userImage: require('../assets/images/profiles/profile2.jpg'),
-    rating: 5,
-    date: 'Jan 10, 2025',
-    service: 'Acrylic Full Set',
-    text: 'Sarah is the best nail tech in town! She takes her time and makes sure everything is perfect. My nails have never looked better.',
-    helpfulCount: 15
-  },
+// Reviews for Sarah Johnson (ID: 1)
+// {
+//   id: '1',
+//   techId: '1', // Sarah Johnson
+//   userName: 'Emily W.',
+//   userImage: require('../assets/images/profiles/profile5.jpg'),
+//   rating: 5,
+//   date: 'Jan 15, 2025',
+//   service: 'Gel Manicure',
+//   text: 'Amazing work as always. Love how my nails turned out. The design was exactly what I wanted.',
+//   photos: [
+//     require('../assets/images/nails/Nail Art Photo.jpeg'),
+//     require('../assets/images/nails/Nail Art Photo (1).webp')
+//   ],
+//   helpfulCount: 23
+// },
+// {
+//   id: '2',
+//   techId: '1', // Sarah Johnson
+//   userName: 'Jessica T.',
+//   userImage: require('../assets/images/profiles/profile2.jpg'),
+//   rating: 5,
+//   date: 'Jan 10, 2025',
+//   service: 'Acrylic Full Set',
+//   text: 'Sarah is the best nail tech in town! She takes her time and makes sure everything is perfect. My nails have never looked better.',
+//   helpfulCount: 15
+// },
   
-  // Reviews for Emily Chen (ID: 2)
-  {
-    id: '3',
-    techId: '2', // Emily Chen
-    userName: 'Michelle K.',
-    userImage: require('../assets/images/profiles/profile3.jpg'),
-    rating: 4,
-    date: 'Jan 5, 2025',
-    service: 'Classic Manicure',
-    text: 'Great attention to detail. The nail art was beautiful, though it took a bit longer than expected. Will definitely come back!',
-    photos: [
-      require('../assets/images/nails/Nail Art Photo (3).webp'),
-      require('../assets/images/nails/Nail Art Photo (4).webp')
-    ],
-    helpfulCount: 8
-  },
-  {
-    id: '4',
-    techId: '2', // Emily Chen
-    userName: 'Amanda R.',
-    userImage: require('../assets/images/profiles/profile4.jpg'),
-    rating: 5,
-    date: 'Dec 28, 2024',
-    service: 'Gel Polish',
-    text: 'Emily is so talented and professional. My nails lasted for weeks without chipping. Highly recommend!',
-    helpfulCount: 19
-  },
+// Reviews for Emily Chen (ID: 2)
+// {
+//   id: '3',
+//   techId: '2', // Emily Chen
+//   userName: 'Michelle K.',
+//   userImage: require('../assets/images/profiles/profile3.jpg'),
+//   rating: 4,
+//   date: 'Jan 5, 2025',
+//   service: 'Classic Manicure',
+//   text: 'Great attention to detail. The nail art was beautiful, though it took a bit longer than expected. Will definitely come back!',
+//   photos: [
+//     require('../assets/images/nails/Nail Art Photo (3).webp'),
+//     require('../assets/images/nails/Nail Art Photo (4).webp')
+//   ],
+//   helpfulCount: 8
+// },
+// {
+//   id: '4',
+//   techId: '2', // Emily Chen
+//   userName: 'Amanda R.',
+//   userImage: require('../assets/images/profiles/profile4.jpg'),
+//   rating: 5,
+//   date: 'Dec 28, 2024',
+//   service: 'Gel Polish',
+//   text: 'Emily is so talented and professional. My nails lasted for weeks without chipping. Highly recommend!',
+//   helpfulCount: 19
+// },
   
-  // Reviews for Maria Garcia (ID: 3)
-  {
-    id: '5',
-    techId: '3', // Maria Garcia
-    userName: 'Sophia L.',
-    userImage: require('../assets/images/profiles/profile1.jpg'),
-    rating: 5,
-    date: 'Dec 20, 2024',
-    service: 'Spa Pedicure',
-    text: 'Best pedicure experience I\'ve ever had! Maria listened to exactly what I wanted and delivered beyond my expectations.',
-    photos: [
-      require('../assets/images/nails/Nail Art Photo 3230266.webp')
-    ],
-    helpfulCount: 27
-  },
-  {
-    id: '6',
-    techId: '3', // Maria Garcia
-    userName: 'Taylor B.',
-    userImage: require('../assets/images/profiles/profile2.jpg'),
-    rating: 4,
-    date: 'Dec 15, 2024',
-    service: 'Classic Pedicure',
-    text: 'Maria has magic hands! My feet feel amazing and look beautiful. The massage was so relaxing too.',
-    helpfulCount: 12
-  },
+// Reviews for Maria Garcia (ID: 3)
+// {
+//   id: '5',
+//   techId: '3', // Maria Garcia
+//   userName: 'Sophia L.',
+//   userImage: require('../assets/images/profiles/profile1.jpg'),
+//   rating: 5,
+//   date: 'Dec 20, 2024',
+//   service: 'Spa Pedicure',
+//   text: 'Best pedicure experience I\'ve ever had! Maria listened to exactly what I wanted and delivered beyond my expectations.',
+//   photos: [
+//     require('../assets/images/nails/Nail Art Photo 3230266.webp')
+//   ],
+//   helpfulCount: 27
+// },
+// {
+//   id: '6',
+//   techId: '3', // Maria Garcia
+//   userName: 'Taylor B.',
+//   userImage: require('../assets/images/profiles/profile2.jpg'),
+//   rating: 4,
+//   date: 'Dec 15, 2024',
+//   service: 'Classic Pedicure',
+//   text: 'Maria has magic hands! My feet feel amazing and look beautiful. The massage was so relaxing too.',
+//   helpfulCount: 12
+// },
   
-  // Reviews for Jennifer Lopez (ID: 4)
-  {
-    id: '7',
-    techId: '4', // Jennifer Lopez
-    userName: 'Rachel G.',
-    userImage: require('../assets/images/profiles/profile3.jpg'),
-    rating: 5,
-    date: 'Dec 10, 2024',
-    service: 'Celebrity Manicure',
-    text: 'Jennifer is an artist! Her designs are so creative and unique. I always get compliments on my nails after seeing her.',
-    photos: [
-      require('../assets/images/nails/Nail Art Photo (2).webp')
-    ],
-    helpfulCount: 31
-  },
-  {
-    id: '8',
-    techId: '4', // Jennifer Lopez
-    userName: 'Olivia M.',
-    userImage: require('../assets/images/profiles/profile5.jpg'),
-    rating: 5,
-    date: 'Dec 5, 2024',
-    service: 'Custom Nail Art',
-    text: 'Worth every penny! Jennifer created the most beautiful custom design for my wedding day. Everyone was asking where I got my nails done.',
-    photos: [
-      require('../assets/images/nails/Nail Art Photo.jpeg'),
-      require('../assets/images/nails/Nail Art Photo (1).webp')
-    ],
-    helpfulCount: 24
-  },
+// Reviews for Jennifer Lopez (ID: 4)
+// {
+//   id: '7',
+//   techId: '4', // Jennifer Lopez
+//   userName: 'Rachel G.',
+//   userImage: require('../assets/images/profiles/profile3.jpg'),
+//   rating: 5,
+//   date: 'Dec 10, 2024',
+//   service: 'Celebrity Manicure',
+//   text: 'Jennifer is an artist! Her designs are so creative and unique. I always get compliments on my nails after seeing her.',
+//   photos: [
+//     require('../assets/images/nails/Nail Art Photo (2).webp')
+//   ],
+//   helpfulCount: 31
+// },
+// {
+//   id: '8',
+//   techId: '4', // Jennifer Lopez
+//   userName: 'Olivia M.',
+//   userImage: require('../assets/images/profiles/profile5.jpg'),
+//   rating: 5,
+//   date: 'Dec 5, 2024',
+//   service: 'Custom Nail Art',
+//   text: 'Worth every penny! Jennifer created the most beautiful custom design for my wedding day. Everyone was asking where I got my nails done.',
+//   photos: [
+//     require('../assets/images/nails/Nail Art Photo.jpeg'),
+//     require('../assets/images/nails/Nail Art Photo (1).webp')
+//   ],
+//   helpfulCount: 24
+// },
   
-  // Reviews for Emily Davis (ID: 5)
-  {
-    id: '9',
-    techId: '5', // Emily Davis
-    userName: 'Madison K.',
-    userImage: require('../assets/images/profiles/profile4.jpg'),
-    rating: 4,
-    date: 'Nov 30, 2024',
-    service: 'Acrylic Full Set',
-    text: 'Emily is a rising star in the nail industry. Her acrylic application is flawless and they last so long without lifting.',
-    helpfulCount: 9
-  },
-  {
-    id: '10',
-    techId: '5', // Emily Davis
-    userName: 'Ava P.',
-    userImage: require('../assets/images/profiles/profile1.jpg'),
-    rating: 5,
-    date: 'Nov 25, 2024',
-    service: 'Custom Design',
-    text: 'Emily has such a creative eye! She suggested a design I wouldn\'t have thought of and it turned out amazing.',
-    photos: [
-      require('../assets/images/nails/Nail Art Photo (4).webp')
-    ],
-    helpfulCount: 16
-  }
-];
-
-// Helper function to get reviews for a specific tech
-export const getReviewsForTech = (techId: string) => {
-  return REVIEWS.filter(review => review.techId === techId);
-};
-
-// Helper function to calculate rating distribution
-export const getRatingDistribution = (techId: string) => {
-  const techReviews = getReviewsForTech(techId);
-  const totalReviews = techReviews.length;
-  
-  if (totalReviews === 0) return { fiveStarPercentage: 0 };
-  
-  const fiveStarCount = techReviews.filter(review => review.rating === 5).length;
-  const fiveStarPercentage = Math.round((fiveStarCount / totalReviews) * 100);
-  
-  return { fiveStarPercentage };
-};
+// Reviews for Emily Davis (ID: 5)
+// {
+//   id: '9',
+//   techId: '5', // Emily Davis
+//   userName: 'Madison K.',
+//   userImage: require('../assets/images/profiles/profile4.jpg'),
+//   rating: 4,
+//   date: 'Nov 30, 2024',
+//   service: 'Acrylic Full Set',
+//   text: 'Emily is a rising star in the nail industry. Her acrylic application is flawless and they last so long without lifting.',
+//   helpfulCount: 9
+// },
+// {
+//   id: '10',
+//   techId: '5', // Emily Davis
+//   userName: 'Ava P.',
+//   userImage: require('../assets/images/profiles/profile1.jpg'),
+//   rating: 5,
+//   date: 'Nov 25, 2024',
+//   service: 'Custom Design',
+//   text: 'Emily has such a creative eye! She suggested a design I wouldn\'t have thought of and it turned out amazing.',
+//   photos: [
+//     require('../assets/images/nails/Nail Art Photo (4).webp')
+//   ],
+//   helpfulCount: 16
+// }
+// };
 
 // ===== INSPIRATION SCREEN TYPES & DATA =====
 

@@ -56,31 +56,6 @@ export default function BookingsScreen() {
         <Ionicons name="location-outline" size={20} color={Colors.icon.secondary} />
         <Text style={styles.infoText}>{item.location}</Text>
       </View>
-      
-      {/* Action Buttons */}
-      <View style={styles.actionButtons}>
-        {item.status === 'confirmed' && (
-          <>
-            <TouchableOpacity style={styles.rescheduleButton}>
-              <Text style={styles.rescheduleButtonText}>Reschedule</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </>
-        )}
-        
-        {item.status === 'pending' && (
-          <>
-            <TouchableOpacity style={styles.confirmButton}>
-              <Text style={styles.confirmButtonText}>Confirm</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
     </TouchableOpacity>
   );
 
@@ -228,57 +203,11 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginTop: 12,
   },
   infoText: {
     fontSize: 14,
     color: Colors.text.secondary,
     marginLeft: 8,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  rescheduleButton: {
-    flex: 1,
-    backgroundColor: Colors.button.primary.background,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  rescheduleButtonText: {
-    color: Colors.button.primary.text,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  confirmButton: {
-    flex: 1,
-    backgroundColor: Colors.button.primary.background,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  confirmButtonText: {
-    color: Colors.button.primary.text,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: Colors.button.secondary.background,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: Colors.button.secondary.border,
-    marginLeft: 8,
-  },
-  cancelButtonText: {
-    color: Colors.button.secondary.text,
-    fontSize: 14,
-    fontWeight: '500',
   },
 });

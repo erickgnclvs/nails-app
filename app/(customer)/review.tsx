@@ -10,12 +10,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Button,
-  Image,
-  Platform,
 } from 'react-native';
+import { Image } from "expo-image";
 
-import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 
 import { Colors } from '@/constants/Colors';

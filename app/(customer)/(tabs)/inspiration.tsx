@@ -1,4 +1,5 @@
-import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Image as RNImage, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';

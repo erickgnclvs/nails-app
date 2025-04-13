@@ -1,4 +1,5 @@
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, ImageSourcePropType, Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, ImageSourcePropType, Image as RNImage } from 'react-native';
+import { Image } from "expo-image";
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -93,7 +94,7 @@ export default function FavoritesScreen() {
 
       {/* Image Viewer using react-native-image-viewing */}
       <ImageViewing
-        images={viewerImages.map(img => (typeof img === 'number' ? Image.resolveAssetSource(img) : { uri: img as string }))} 
+        images={viewerImages.map(img => (typeof img === 'number' ? RNImage.resolveAssetSource(img) : { uri: img as string }))} 
         imageIndex={viewerIndex}
         visible={isViewerVisible}
         onRequestClose={closeImageViewer}

@@ -4,14 +4,12 @@ import {
   View,
   Text,
   ScrollView,
-  Image,
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
-  FlatList,
   Modal,
-  Pressable,
 } from 'react-native';
+import { Image } from "expo-image"
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';

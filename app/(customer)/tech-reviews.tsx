@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, ViewStyle, TextStyle, ImageStyle, ColorValue, Modal, Animated, ImageSourcePropType } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView, ViewStyle, TextStyle, ImageStyle, Modal, Animated, ImageSourcePropType, Image as RNImage } from 'react-native';
+import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/Colors';
@@ -143,7 +144,7 @@ export default function TechReviewsScreen() {
   // --- Image Viewer Handlers ---
   const openImageViewer = (photos: ImageSourcePropType[], index: number) => {
     const formattedImages = photos.map(photoSource => 
-        ({ uri: Image.resolveAssetSource(photoSource as ImageSourcePropType).uri })
+        ({ uri: RNImage.resolveAssetSource(photoSource as ImageSourcePropType).uri })
     );
     setImagesForViewer(formattedImages);
     setCurrentImageIndex(index);

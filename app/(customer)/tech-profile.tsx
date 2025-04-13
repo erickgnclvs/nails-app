@@ -4,18 +4,17 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  Image,
   ImageSourcePropType, // Import missing type
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  FlatList,
   SafeAreaView,
-  Modal,
+  Image as RNImage,
 } from 'react-native';
+import { Image } from "expo-image";
 
 import { Colors } from '@/constants/Colors';
-import { FAVORITE_TECHS, Service, TechItem } from '@/data/mockData';
+import { FAVORITE_TECHS } from '@/data/mockData';
 import ImageView from "react-native-image-viewing";
 
 export default function TechProfileScreen() {
@@ -41,7 +40,7 @@ export default function TechProfileScreen() {
   const openImageViewer = (photos: ImageSourcePropType[], index: number) => {
     if (!photos || photos.length === 0) return; // Guard clause
     const formattedImages = photos.map(photoSource => 
-        ({ uri: Image.resolveAssetSource(photoSource as ImageSourcePropType).uri })
+        ({ uri: RNImage.resolveAssetSource(photoSource as ImageSourcePropType).uri })
     );
     setImagesForViewer(formattedImages);
     setCurrentImageIndex(index);

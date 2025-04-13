@@ -5,15 +5,16 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
   TouchableOpacity,
   Alert,
   SafeAreaView,
-  ActivityIndicator, // Added for loading state
+  ActivityIndicator,
+  Image as RNImage,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import ImageView from "react-native-image-viewing"; // Import Image Viewer
+import { Image } from "expo-image"
 
 import { Colors } from '@/constants/Colors'; 
 import { BOOKINGS, REVIEWS, BookingItem, Review } from '@/data/mockData';
@@ -126,9 +127,11 @@ export default function AppointmentDetailsScreen() {
   };
 
   // Prepare images for the viewer (needs {uri: string} format)
-  const imagesForViewer = review?.photos?.map(photoSource => 
-    ({ uri: Image.resolveAssetSource(photoSource as any).uri })
-  ) || [];
+  const imagesForViewer = review?.photos?.map(photoSource => {
+    // Handle different source types if necessary, but resolveAssetSource handles require()
+    const resolvedSource = RNImage.resolveAssetSource(photoSource as any);
+    return { uri: resolvedSource.uri };
+  }) || [];
 
   // --- Render Action Buttons --- //
   // Decide where and how to render these based on final design

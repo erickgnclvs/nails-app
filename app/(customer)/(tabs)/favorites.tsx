@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, ImageSourcePropType, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -6,11 +6,17 @@ import { useRouter } from 'expo-router';
 import { FAVORITE_TECHS, TechItem } from '@/data/mockData';
 import { Colors } from '@/constants/Colors';
 import TechCard from '@/components/TechCard';
+import ImageViewing from 'react-native-image-viewing';
 
 export default function FavoritesScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   
+  // State for Image Viewer Modal
+  const [isViewerVisible, setIsViewerVisible] = useState(false);
+  const [viewerImages, setViewerImages] = useState<ImageSourcePropType[]>([]);
+  const [viewerIndex, setViewerIndex] = useState(0);
+
   // Filter techs based on search query
   const filteredTechs = searchQuery.trim() === '' 
     ? FAVORITE_TECHS 
@@ -19,11 +25,32 @@ export default function FavoritesScreen() {
         tech.specialty.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
+  // --- Image Viewer Functions ---
+  const openImageViewer = (images: ImageSourcePropType[], index: number) => {
+    if (images && images.length > 0) {
+      setViewerImages(images);
+      setViewerIndex(index);
+      setIsViewerVisible(true);
+    }
+  };
+
+  const closeImageViewer = () => {
+    setIsViewerVisible(false);
+    setViewerImages([]);
+    setViewerIndex(0);
+  };
+  // --- End Image Viewer Functions ---
+
   const renderTechItem = ({ item }: { item: TechItem }) => (
-    <TechCard item={item} isFavorite={true} onToggleFavorite={(id) => {
-      // Toggle favorite logic would go here
-      console.log(`Toggle favorite for tech ${id}`);
-    }} />
+    <TechCard 
+      item={item} 
+      isFavorite={true} 
+      onToggleFavorite={(id) => {
+        console.log(`Toggle favorite for tech ${id}`);
+      }} 
+      showPortfolio={true} // Show portfolio
+      onPortfolioImagePress={openImageViewer} // Add handler
+    />
   );
 
   return (
@@ -62,6 +89,25 @@ export default function FavoritesScreen() {
             <Text style={styles.emptySubtext}>Your favorite nail technicians will appear here</Text>
           </View>
         }
+      />
+
+      {/* Image Viewer using react-native-image-viewing */}
+      <ImageViewing
+        images={viewerImages.map(img => (typeof img === 'number' ? Image.resolveAssetSource(img) : { uri: img as string }))} 
+        imageIndex={viewerIndex}
+        visible={isViewerVisible}
+        onRequestClose={closeImageViewer}
+        animationType="fade"
+        HeaderComponent={({ imageIndex }) => (
+          <View style={styles.imageViewerHeader}>
+            <Text style={styles.imageViewerHeaderText}>
+              {`${imageIndex + 1} / ${viewerImages.length}`}
+            </Text>
+            <TouchableOpacity onPress={closeImageViewer} style={styles.imageViewerCloseButton}>
+               <Ionicons name="close" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        )}
       />
     </View>
   );
@@ -134,4 +180,25 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  // Styles for ImageViewing Header
+  imageViewerHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingTop: 40, // Adjust for status bar
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  imageViewerHeaderText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  imageViewerCloseButton: {
+     padding: 5,
+  }
 });

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Image, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, ScrollView, Keyboard, TouchableWithoutFeedback, ImageSourcePropType, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { TOP_RATED_TECHS, TechItem, FAVORITE_TECHS } from '@/data/mockData';
 import { Colors } from '@/constants/Colors';
 import TechCard from '@/components/TechCard';
+import ImageViewing from 'react-native-image-viewing';
 
 // Define the tech type for search results
 type SearchTech = {
@@ -29,7 +30,7 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   // Use FAVORITE_TECHS which already includes portfolio images
   // This ensures we have complete tech data with portfolios
-  const [filteredTechs, setFilteredTechs] = useState<SearchTech[]>(FAVORITE_TECHS);
+  const [filteredTechs, setFilteredTechs] = useState<TechItem[]>(FAVORITE_TECHS);
   const [categories, setCategories] = useState<Category[]>([
     { id: '1', name: 'All', active: true },
     { id: '2', name: 'Nail Art', active: false },
@@ -37,6 +38,11 @@ export default function SearchScreen() {
     { id: '4', name: 'Pedicure', active: false },
     { id: '5', name: 'Gel', active: false },
   ]);
+
+  // State for Image Viewer Modal
+  const [isViewerVisible, setIsViewerVisible] = useState(false);
+  const [viewerImages, setViewerImages] = useState<ImageSourcePropType[]>([]);
+  const [viewerIndex, setViewerIndex] = useState(0);
 
   useEffect(() => {
     filterTechs();
@@ -86,6 +92,22 @@ export default function SearchScreen() {
     return Math.random() * 5;
   };
 
+  // --- Image Viewer Functions ---
+  const openImageViewer = (images: ImageSourcePropType[], index: number) => {
+    if (images && images.length > 0) {
+      setViewerImages(images);
+      setViewerIndex(index);
+      setIsViewerVisible(true);
+    }
+  };
+
+  const closeImageViewer = () => {
+    setIsViewerVisible(false);
+    setViewerImages([]);
+    setViewerIndex(0);
+  };
+  // --- End Image Viewer Functions ---
+
   const renderTechItem = ({ item }: { item: SearchTech }) => {
     // Generate a random distance if not provided in the item
     const distance = item.distance !== undefined ? item.distance : getRandomDistance();
@@ -100,6 +122,8 @@ export default function SearchScreen() {
             // Add logic to toggle favorite status
           }}
           distance={distance}
+          showPortfolio={true} // Show the portfolio section
+          onPortfolioImagePress={openImageViewer} // Pass the handler
         />
       </View>
     );
@@ -179,6 +203,25 @@ export default function SearchScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.techList}
       />
+
+      {/* Image Viewer using react-native-image-viewing */}
+      <ImageViewing
+        images={viewerImages.map(img => (typeof img === 'number' ? Image.resolveAssetSource(img) : { uri: img as string }))} // Ensure images are in the correct format { uri: '...' } or require('...')
+        imageIndex={viewerIndex}
+        visible={isViewerVisible}
+        onRequestClose={closeImageViewer}
+        animationType="fade"
+        HeaderComponent={({ imageIndex }) => (
+          <View style={styles.imageViewerHeader}>
+            <Text style={styles.imageViewerHeaderText}>
+              {`${imageIndex + 1} / ${viewerImages.length}`}
+            </Text>
+            <TouchableOpacity onPress={closeImageViewer} style={styles.imageViewerCloseButton}>
+               <Ionicons name="close" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        )}
+      />
     </View>
     </TouchableWithoutFeedback>
   );
@@ -250,7 +293,7 @@ const styles = StyleSheet.create({
     minWidth: 55,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 34, // Thicker, more substantial pills
+    height: 34,
   },
   activeCategoryPill: {
     backgroundColor: '#222',
@@ -274,26 +317,26 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   techCardWrapper: {
-    marginBottom: 6,
+    marginBottom: 16,
   },
-  tagsContainer: {
+  imageViewerHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingTop: 40, // Adjust for status bar
+    paddingHorizontal: 10,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  tagPill: {
-    backgroundColor: '#f5f5f5',
-    height: 34,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 18,
-    marginRight: 10,
-    marginBottom: 4,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  tagText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: Colors.text.secondary,
+  imageViewerHeaderText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
+  imageViewerCloseButton: {
+     padding: 5,
+  }
 });

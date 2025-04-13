@@ -12,9 +12,11 @@ type TechCardProps = {
   isFavorite?: boolean;
   onToggleFavorite?: (id: string) => void;
   distance?: number; // Distance in miles
+  onPortfolioImagePress?: (images: any[], index: number) => void;
+  showPortfolio?: boolean; // Add this line
 };
 
-export default function TechCard({ item, isFavorite = true, onToggleFavorite, distance }: TechCardProps) {
+export default function TechCard({ item, isFavorite = true, onToggleFavorite, distance, onPortfolioImagePress, showPortfolio }: TechCardProps) {
   const router = useRouter();
   
   return (
@@ -68,10 +70,10 @@ export default function TechCard({ item, isFavorite = true, onToggleFavorite, di
       </View>
       
       {/* Portfolio Preview */}
-      {item.portfolio && item.portfolio.length > 0 && (
+      {showPortfolio && item.portfolio && item.portfolio.length > 0 && (
         <View style={styles.portfolioContainer}>
           <View style={styles.portfolioHeader}>
-            <Text style={styles.portfolioTitle}>Recent Work</Text>
+            {/* <Text style={styles.portfolioTitle}>Recent Work</Text> */}
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation();
@@ -79,7 +81,7 @@ export default function TechCard({ item, isFavorite = true, onToggleFavorite, di
                 router.push(`/tech-profile?id=${item.id}&tab=portfolio`);
               }}
             >
-              <Text style={styles.seeAllText}>See all</Text>
+              {/* <Text style={styles.seeAllText}>See all</Text> */}
             </TouchableOpacity>
           </View>
           <ScrollView 
@@ -92,7 +94,9 @@ export default function TechCard({ item, isFavorite = true, onToggleFavorite, di
                 key={index}
                 onPress={(e) => {
                   e.stopPropagation();
-                  // Could open a modal with larger image view
+                  if (onPortfolioImagePress && item.portfolio) {
+                    onPortfolioImagePress(item.portfolio, index);
+                  }
                 }}
               >
                 <Image 

@@ -179,7 +179,11 @@ export default function AppointmentDetailsScreen() {
         <Text style={styles.headerTitle}>Appointment Details</Text>
         <View style={{ width: 24 }} />
       </View>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        style={styles.scrollView}
+      >
         {/* Tech Info Card */}
         <View style={styles.card}>
           <View style={styles.techInfoContainer}>
@@ -190,7 +194,6 @@ export default function AppointmentDetailsScreen() {
               <TouchableOpacity onPress={() => router.push({ pathname: '/(customer)/tech-profile', params: { id: appointment.techName } })}>
                 <Text style={styles.viewProfileText}>View Profile</Text>
               </TouchableOpacity>
-              <Text style={styles.techContact}>Contact via app</Text>
             </View>
           </View>
         </View>
